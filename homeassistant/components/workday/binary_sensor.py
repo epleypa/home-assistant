@@ -7,7 +7,13 @@ import holidays
 import voluptuous as vol
 
 from homeassistant.components.binary_sensor import PLATFORM_SCHEMA, BinarySensorEntity
-from homeassistant.const import CONF_NAME, WEEKDAYS
+from homeassistant.const import CONF_NAME, CONF_EXCLUDE, CONF_OFFSET, WEEKDAYS
+from .const import (
+    DEFAULT_WORKDAYS,
+    DEFAULT_EXCLUDES,
+    DEFAULT_NAME,
+    DEFAULT_OFFSET,
+)
 import homeassistant.helpers.config_validation as cv
 
 _LOGGER = logging.getLogger(__name__)
@@ -21,13 +27,6 @@ CONF_EXCLUDES = "excludes"
 CONF_OFFSET = "days_offset"
 CONF_ADD_HOLIDAYS = "add_holidays"
 CONF_REMOVE_HOLIDAYS = "remove_holidays"
-
-# By default, Monday - Friday are workdays
-DEFAULT_WORKDAYS = ["mon", "tue", "wed", "thu", "fri"]
-# By default, public holidays, Saturdays and Sundays are excluded from workdays
-DEFAULT_EXCLUDES = ["sat", "sun", "holiday"]
-DEFAULT_NAME = "Workday Sensor"
-DEFAULT_OFFSET = 0
 
 
 def valid_country(value: Any) -> str:
@@ -51,7 +50,7 @@ def valid_country(value: Any) -> str:
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
     {
         vol.Required(CONF_COUNTRY): valid_country,
-        vol.Optional(CONF_EXCLUDES, default=DEFAULT_EXCLUDES): vol.All(
+        vol.Optional(CONF_EXCLUDE, default=DEFAULT_EXCLUDES): vol.All(
             cv.ensure_list, [vol.In(ALLOWED_DAYS)]
         ),
         vol.Optional(CONF_NAME, default=DEFAULT_NAME): cv.string,
@@ -72,7 +71,7 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
     remove_holidays = config.get(CONF_REMOVE_HOLIDAYS)
     country = config[CONF_COUNTRY]
     days_offset = config[CONF_OFFSET]
-    excludes = config[CONF_EXCLUDES]
+    excludes = config[CONF_EXCLUDE]
     province = config.get(CONF_PROVINCE)
     sensor_name = config[CONF_NAME]
     workdays = config[CONF_WORKDAYS]
@@ -175,7 +174,7 @@ class IsWorkdaySensor(BinarySensorEntity):
         # return self._attributes
         return {
             CONF_WORKDAYS: self._workdays,
-            CONF_EXCLUDES: self._excludes,
+            CONF_EXCLUDE: self._excludes,
             CONF_OFFSET: self._days_offset,
         }
 
