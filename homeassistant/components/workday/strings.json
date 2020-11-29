@@ -1,0 +1,27 @@
+{
+  "config": {
+      "abort": {
+          "already_configured": "Service is already configured"
+      },
+      "error": {
+          "cannot_connect": "Failed to connect",
+          "unknown": "Unexpected error"
+      },
+      "step": {
+          "user": {
+              "data": {
+                  "CONF_ADD_HOLIDAYS": "Holidays to Add",
+                  "CONF_REMOVE_HOLIDAYS": "Holidays to Remove",
+                  "CONF_COUNTRY": "Country",
+                  "CONF_OFFSET": "Days Offset",
+                  "CONF_EXCLUDE": "Exclude Days of Week",
+                  "CONF_PROVINCE": "Province/State",
+                  "CONF_NAME": "Name",
+                  "CONF_WORKDAYS": "Working Days of Week"
+              },
+              "description": "Workday Configuration",
+              "title": "Workday"
+          }
+      }
+  }
+}
